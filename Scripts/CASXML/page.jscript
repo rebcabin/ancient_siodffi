@@ -1,0 +1,152 @@
+    //----------------------------------------------------------------------------
+    // Everything from here on is parser neutral !!!
+
+    function UpdateStateSelect()
+    {
+        var root = XMLDoc1.root;
+        var states = root.children.item("STATE");
+        var slist = document.STATEFORM.STATELIST;
+        // Clear out the current set of states.
+        while (slist.length > 0)
+            slist.options.remove(slist.item(i));
+
+        var i;
+        for (i = 0; i < states.length; i++)
+        {
+            var e = states.item(i);
+            var opt = document.createElement("OPTION");
+            opt.text = e.getAttribute("NAME");
+            opt.value = e;
+            slist.options.add(opt);
+        }
+        slist.selectedIndex = 0;
+        SelectState(0);
+    }
+
+    function SelectState(index)
+    {
+        var root = XMLDoc1.root;
+        var states = root.children.item("STATE");
+        CurrentState = states.item(index);
+
+        var clist = document.STATEFORM.CITYLIST;
+        // Clear out the current set of cities.
+        while (clist.length > 0)
+            clist.options.remove(clist.item(i));
+
+        // And add the new cities.
+		var cities = CurrentState.children.item("CITY");
+        var i;
+		for( i = 0; i < cities.length; i++ )
+		{
+			var e = cities.item(i);
+            var opt = document.createElement("OPTION");
+            opt.text = e.getAttribute("NAME");
+            clist.add(opt);
+		}
+        clist.selectedIndex =0 ;
+        SelectCity(0);
+    }
+    
+	function SelectCity( index )
+	{
+		WEATHERSPAN.innerText = "";  // Clear any old weather info
+
+		var cities = CurrentState.children.item("CITY");
+        var clist = document.STATEFORM.CITYLIST;            
+        var CurrentCity = cities.item(index);
+        var cityName = CurrentCity.getAttribute("NAME");
+        var stateName = CurrentState.getAttribute("NAME");
+		ForecastWeather(CurrentCity, cityName, stateName);
+	}
+
+	// Get information from weather element and print to screen
+	function ForecastWeather(city, cityName, stateName)
+	{
+		var children = city.children;
+		if( children != null )
+		{
+			var SKIES, HIC, HIF, LOWC, LOWF;
+			var DESCRIPTION = "";
+			var weatherHTML = "<TABLE BORDER=5 CELLPADDING=5><TR><TD COLSPAN=3>";
+            var xmltext = '<STATE NAME="' + stateName + '">\n';
+            xmltext = xmltext + '    <CITY NAME="' + cityName + '">\n';
+
+			var numChildren = children.length;
+			for( i = 0; i < numChildren; i++ )
+			{
+				var weatherInfo = children.item(i);
+                if( weatherInfo.type == 0 )
+				{
+					var tagName = GetTagName( weatherInfo );
+
+					if( tagName == "SKIES" )
+                    {
+						SKIES = weatherInfo.getAttribute("VALUE");
+                        xmltext = xmltext + '        <SKIES VALUE="' + SKIES + '"/>\n';
+                    }
+					if( tagName == "HI" )
+					{
+						HIC = weatherInfo.getAttribute("C");
+						HIF = weatherInfo.getAttribute("F");
+                        xmltext = xmltext + '        <HI C="' + HIC + '" F="' + HIF + '"/>\n';
+					}
+					if( tagName == "LOW" )
+					{
+						LOWC = weatherInfo.getAttribute("C");
+						LOWF = weatherInfo.getAttribute("F");
+                        xmltext = xmltext + '        <LOW C="' + LOWC + '" F="' + LOWF + '"/>\n';
+					}
+				}
+				else 
+				{
+					DESCRIPTION = weatherInfo.text;	
+                    xmltext = xmltext + '        ' + DESCRIPTION + '\n';
+				}
+			}
+            xmltext = xmltext + "    </CITY>\n</STATE>";
+
+			weatherHTML = weatherHTML + "<h1>" +  cityName + " </h1>";
+			if( DESCRIPTION != "" )
+				weatherHTML = weatherHTML + "<i>" + DESCRIPTION + "</i>";
+			weatherHTML = weatherHTML + "<TD ROWSPAN=3><IMG SRC=" + GetWeatherIcon(SKIES) + ">";
+            weatherHTML = weatherHTML + "<TD ROWSPAN=3><XMP>" + xmltext + "</XMP>";
+			weatherHTML = weatherHTML + "<TR><TD><font color=red><B>HI:<TD><font color=red><B>" + HIC + " C<TD><font color=red><B>" + HIF + " F</font><br>";
+			weatherHTML = weatherHTML + "<TR><TD><font color=blue><B>LOW:<TD><font color=blue><B>" + LOWC + " C<TD><font color=blue><B>" + LOWF + " F</font><br>";
+
+			weatherHTML = weatherHTML + "</TD></TABLE>";
+            
+			WEATHERSPAN.innerHTML = weatherHTML;
+		}
+	}
+	
+	function GetTagName(elem)
+	{
+		if (elem.type == 0)
+		    return elem.tagName;
+		else
+			return " ";
+	}
+
+	function GetWeatherIcon( skies )
+	{
+		if( skies == "SUNNY" )
+			return "icons/sunny.gif";
+		if( skies == "PARTLYSUNNY" )
+			return "icons/partlysunny.gif";
+		if( skies == "PARTLYCLOUDY" )
+			return "icons/partlycloudy.gif";
+		if( skies == "RAIN" )
+			return "icons/rain.gif";
+		if( skies == "SNOW" )
+			return "icons/snow.gif";
+	}
+
+    function ResolveURL(url)
+    {
+        var loc = window.location.toString();
+        var i = loc.lastIndexOf("/");
+        var result = loc.substring(0,i+1) + url;
+        return result
+    }
+

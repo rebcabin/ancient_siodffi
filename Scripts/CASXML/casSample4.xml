@@ -1,0 +1,19 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following demonstrates embedded XML that refers to a method
+    implicitly.  This XML appears at CLASS scope immediately preceding
+    the definition of, say, "Read" in class "FileUtilities2" in a file
+    that belongs to FileUtilComponent. Note that the permission tag
+    now fits on a single line.
+
+E N D   C O M M E N T -->
+
+<permission permissionClass="FileIOPermission" action="request">
+    <stateData>
+        :::
+</> </>
+

@@ -1,0 +1,11 @@
+HKCR
+{
+	NoRemove AppID
+	{
+		{105BB1C5-EFDD-11D0-9506-D74222CE0464} = s 'ComTest2'
+		'ComTest2.EXE'
+		{
+			val AppID = s {105BB1C5-EFDD-11D0-9506-D74222CE0464}
+		}
+	}
+}

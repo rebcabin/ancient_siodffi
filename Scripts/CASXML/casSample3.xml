@@ -1,0 +1,29 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following demonstrates embedded XML that refers to a class
+    explicitly.  This XML appears at file scope in a file that belongs
+    to FileUtilComponent, and the tools project knows this.  Its only
+    difference from the sample above is that it does not have the
+    targetModule and targetComponent attributes, since these are known
+    to the tools.  Note also that some textual convention must
+    separate this text from the source.  For Java and C++, we
+    recommend '/*% XML' to delimit the beginning of embedded XML and
+    '%*/' to delimit the end.  This recommendation is by analogy to
+    IIS' ASP pages, which delimit server scripts with embedded '<%'
+    and '%>'.
+
+E N D   C O M M E N T -->
+
+<permission
+    permissionClass = "FileIOPermission"
+    action          = "request"
+    targetClass     = "FileUtilities2"
+    >
+    <stateData>
+        :::
+</> </>
+

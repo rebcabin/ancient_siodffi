@@ -1,0 +1,48 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following demonstrates a fully qualified permission as might
+    appear in a standalone XML file.  Embedded XML would not have the
+    targetModule and targetComponent attributes, and might not have
+    the targetClass attribute if it applied to a class implicitly,
+    simply by preceding it textually.
+
+    One could use lots of white space to make this prettier, or one
+    could rely on XMLpad to beautify it.
+
+E N D   C O M M E N T -->
+
+<permission
+    permissionClass = "FileIOPermission"
+    action          = "request"
+    targetModule    = "FileStuff.pe"  
+    targetComponent = "FileUtilComponent"
+    targetClass     = "FileUtilities"
+    >
+
+    <!-- since there's no targetMethod, this permission request -->
+    <!-- applies to all methods in the class                    -->
+
+    <stateData>
+        <stateParameter name = "IncludeRead">
+            *\MergeSource\*.txt;*\MergeSource\*.doc
+        </stateParameter>
+        <stateParameter name = "ExcludeRead">
+            *\MergeSource\*_sys.txt
+        </stateParameter>
+        <stateParameter name = "IncludeWrite">
+            *\MergeDestination\*.txt;*\MergeDestination\*.doc
+        </stateParameter>
+        <stateParameter name = "ExcludeWrite">
+            *\MergeDestination\*_sys.txt
+        </stateParameter>
+        <stateParameter name = "IncludeDelete">
+        </stateParameter>
+        <stateParameter name = "ExcludeDelete">
+        </stateParameter>
+    </stateData>
+</permission>
+

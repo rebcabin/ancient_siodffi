@@ -1,0 +1,23 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following demonstrates embedded XML that refers to a method
+    EXPLICITLY.  This XML appears either at FILE scope immediately
+    preceding class "FileUtilities2", or at CLASS scope anywhere in
+    class "FileUtilities2" in a file that belongs to
+    FileUtilComponent.
+
+E N D   C O M M E N T -->
+
+<permission
+    permissionClass = "FileIOPermission"
+    action          = "request"
+    targetMethod    = "Read"
+    >
+    <stateData>
+        :::
+</> </>
+

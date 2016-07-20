@@ -1,0 +1,30 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following would appear in a component, specified explicitly,
+    that needs to stop a stack walk because it is a generic utility
+    component meant to be called by relatively untrusted code.  The
+    reason the component is specified explicitly is that the target
+    would be ambiguous otherwise.  Its incorrect, implicit
+    interpretation would be to target the immediately following class
+    or interface definition.
+
+E N D   C O M M E N T -->
+
+<permission
+    action          = "request"
+    permissionClass = "AssertionPermission"
+    targetComponent = "FileUtilities3"
+    >  <!-- note: no state data needed -->
+</>
+
+<permission
+    action          = "assert"
+    permissionClass = "FileIOPermission"
+    >
+    <stateData>
+        :::
+</> </>

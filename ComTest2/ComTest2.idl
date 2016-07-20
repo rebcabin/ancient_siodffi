@@ -1,0 +1,41 @@
+// ComTest2.idl : IDL source for ComTest2.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (ComTest2.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+	[
+		object,
+		uuid(105BB1D1-EFDD-11D0-9506-D74222CE0464),
+		dual,
+		helpstring("ICT2 Interface"),
+		pointer_default(unique)
+	]
+	interface ICT2 : IDispatch
+	{
+		[id(1), helpstring("method SayHello")] HRESULT SayHello([out] BSTR* pbstrOut);
+		[id(2), helpstring("method MoreHellos")] HRESULT MoreHellos([out] BSTR * pbOut1, [out] BSTR * pbOut2, [out] BSTR * pbOut3, [out] BSTR * pbOut4);
+		[id(3), helpstring("method ShortTest")] HRESULT ShortTest([out] short * pShort);
+	};
+[
+	uuid(105BB1C4-EFDD-11D0-9506-D74222CE0464),
+	version(1.0),
+	helpstring("ComTest2 1.0 Type Library")
+]
+library COMTEST2Lib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(105BB1D2-EFDD-11D0-9506-D74222CE0464),
+		helpstring("CT2 Class")
+	]
+	coclass CT2
+	{
+		[default] interface ICT2;
+	};
+};

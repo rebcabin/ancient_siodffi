@@ -1,0 +1,347 @@
+<!-- -->
+<!-- file      : trends6-en.html -->
+<!-- date      : 11/03/98 -->
+<!-- time      : 19:36:14 -->
+<!-- -->
+<!-- #DEFINE TEXTC "#3F3552" -->
+<!-- #DEFINE CELLC "#8982A3" -->
+<!-- #DEFINE TITLE "MusicML A XML EXPERIENCE" -->
+
+<HTML>
+
+<!-- #INCLUDE "../_general/head_trends" -->
+<HEAD><TITLE>The Connection Factory - Trends</TITLE></HEAD>
+<!-- #END "../_general/head_trends" -->
+
+<!-- #INCLUDE "../_general/body" -->
+<BODY BGCOLOR    ="#FFFFFF"
+      BACKGROUND ="/images/bkgnd_algemeen.gif"
+      ALINK      ="#3F3552"
+      LINK       ="#3F3552"
+      VLINK      ="#3F3552">
+<!-- #END "../_general/body" -->
+
+<!-- #INCLUDE "../_general/intro" -->
+<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="620">
+
+<TR>
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="170">
+   <IMG SRC="/images/wit.gif" ALIGN=LEFT WIDTH=47 HEIGHT=1>
+   <IMG SRC="/images/logo_algemeen.gif" ALT="The Connection Factory"
+            VSPACE="3" WIDTH="122" HEIGHT="45" ALIGN=BOTTOM>
+   </TD>
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="410">
+
+   </TD>
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="40">
+
+   </TD>
+</TR>
+
+<TR>
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="170">
+
+   </TD>
+   <TD ALIGN=LEFT BGCOLOR="#8982A3" VALIGN=TOP WIDTH="410">
+   <FONT COLOR="#3F3552">
+   <B>MusicML A XML EXPERIENCE</B>
+   </FONT>
+   </TD>
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="40">
+
+   </TD>
+</TR>
+
+</TABLE>
+<!-- #END "../_general/intro" -->
+
+<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="620">
+
+<TR>
+   <!----------------------------- navigation --------------------------->
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="170">
+
+   <!-- #INCLUDE "../_general/trends_index_terug" -->
+   <A HREF="/trends/index2.html"><IMG SRC="/images/sub_trend_trends_arrow.gif" ALT="trends"
+      HSPACE=10 VSPACE=10 ALIGN=BOTTOM WIDTH=82 HEIGHT=34 BORDER=0></A><BR>
+<!-- #END "../_general/trends_index_terug" -->
+   <!-- #INCLUDE "../_general/trends_archief_link" -->
+   <A HREF="/trends/archief.html"><IMG SRC="/images/sub_trend_archief.gif" ALT="archief"
+      HSPACE=10 VSPACE=10 ALIGN=BOTTOM WIDTH=82 HEIGHT=34 BORDER=0></A><BR>
+<!-- #END "../_general/trends_archief_link" -->
+   <!-- #INCLUDE "../_general/trends_credits_link" -->
+   <A HREF="/trends/credits.html"><IMG SRC="/images/sub_trend_people.gif" ALT="credits"
+      HSPACE=10 VSPACE=10 ALIGN=BOTTOM WIDTH=82 HEIGHT=34 BORDER=0></A><BR>
+<!-- #END "../_general/trends_credits_link" -->
+   <!-- #INCLUDE "../_general/trends_contact_link" -->
+   <A HREF="/trends/contact.html"><IMG SRC="/images/sub_trend_contact.gif" ALT="contact"
+      HSPACE=10 VSPACE=10 ALIGN=BOTTOM WIDTH=82 HEIGHT=34 BORDER=0></A><BR>
+<!-- #END "../_general/trends_contact_link" -->
+   <!-- #INCLUDE "../_general/log_trends" -->
+<IMG SRC="/cgi-bin/logscribe/makelog.pl?tcf.config,/trends/trends6-en,http://www.tcf.nl/trends/trends6-en.html">
+<!-- #END "../_general/log_trends" -->
+
+<A HREF="http://www.jars.com"><IMG ALIGN="right" BORDER="0" SRC="/trends/images/5perc_s.gif"></A>
+   </TD>
+   
+   <!----------------------------- begin text --------------------------->
+   <TD ALIGN=LEFT VALIGN=TOP WIDTH="410">
+ 
+   <IMG SRC="/images/wit.gif" WIDTH=1 HEIGHT=30><BR>
+
+   
+   <BLOCKQUOTE>
+    <APPLET CODE=MusicML.class ARCHIVE="MML.jar" width=310 height=200>
+     <PARAM  NAME = XMLFILE  VALUE = "http://www.tcf.nl/trends/MusicML-vb1.xml">
+     <PARAM  NAME = ROWWIDTH VALUE = "300">
+    </APPLET>
+
+   <CENTER><FONT size="2">a MusicML <A HREF="/trends/MusicML-vb1.xml" target="_new">example (*)</A></FONT></CENTER>
+   <BR>
+   (*) You need a jdk1.1.2 compatible browser like Netscape Communicator 4.
+   Explorer 4 is not working at this moment because Microsoft shipped a
+   previous release of their xml-parser with Explorer 4.
+   <A HREF="/trends/trends6b-en.html">Here you can find screenshots
+   of the examples</A>
+   <P>
+
+   Currently, the most popular markup language for the World Wide Web
+   is HTML. Although HTML is extremely popular it lacks the possibility
+   to extend it's functionality. Due to this shortcoming, the <A HREF=
+   "http://www.w3c.org" target="_new">World Wide Web Consortium</A> introduced a new
+   language called XML. XML or Extensible Markup Language, is not a fixed
+   defined markup language but more or less a Meta language strongly based
+   on SGML.
+   <P>
+   Based on XML we defined our own language specifically for sheet  music
+   called MusicML. Based on the definition of MusicML we wrote a MusicML
+   browser in Java to be able to display our efforts.
+   <P>
+   Our goal was not to define a sheetmusic specific language, but to explore
+   the capabilities and limits of XML.
+
+   </BLOCKQUOTE>
+
+   <FONT COLOR="#3F3552">MusicML, a document type definition for sheetmusic</FONT>
+   <BLOCKQUOTE> 
+   XML documents basically have two components: the document type definition
+   or DTD and the actual content itself. A DTD is a description of
+   the document elements attributes and so on. For a complete description
+   take a look at the <A HREF="http://www.w3.org/TR/1998/REC-xml-19980210" target="_new">
+   XML specification</A> issued by the World Wide Web Consortium at
+   10th February 1998.
+   <P>
+   A complete listing of the MusicML DTD can be found <A HREF="/trends/music.dtd">here</A>.
+   <P>
+   A sheetmusic document according to MusicML has the following basic
+   structure:
+
+   <PRE>
+    <FONT size="2">
+     &lt;sheetmusic&gt;
+       &lt;musicrow size="two"&gt; 
+       &lt;/musicrow&gt;
+       &lt;musicrow size="two"&gt;
+       &lt;/musicrow&gt;
+     &lt;/sheetmusic&gt;
+    </FONT>
+   </PRE>
+
+   In this example our piece of art has two lines. Every row has a double
+   staff.
+   <P>
+   We divided a musicrow into logical pieces called a segment. A segment
+   can contain several notes, chords grouped together between
+   to vertical bars. Within a segment there are subsegments for every
+   staff.
+   <P>
+   At the beginning of every musicrow there are several special elements
+   like the Cleff which are defined for the entire musicrow. These special
+   elements are grouped together in a so-called "entrysegment".
+
+   Our music row has then the following structure:
+   <PRE>
+    <FONT size="2">
+     &lt;musicrow size="two"&gt;
+       &lt;entrysegment&gt;
+         &lt;entrypart&gt;       
+         &lt;/entrypart&gt;
+         &lt;entrypart&gt;
+         &lt;/entrypart&gt;
+       &lt;/entrysegment&gt;
+       &lt;segment&gt;
+       &lt;/segment&gt;
+       &lt;segment&gt;
+       &lt;/segment&gt;
+     &lt;/musicrow&gt;
+    </FONT>
+   </PRE>
+   A typical two segment musicrow with two staffs and an entrypart
+   for every staff will look like this:
+
+    <APPLET CODE=MusicML.class ARCHIVE="MML.jar" width=310 height=200>
+     <PARAM  NAME = XMLFILE  VALUE = "http://www.tcf.nl/trends/MusicML-vb2.xml">
+     <PARAM  NAME = ROWWIDTH VALUE = "310">
+    </APPLET>
+
+   Notes and rests can be grouped together within a chord or within a
+   beam. A segment contains one or two subsegments (for every staff
+   one) which itself contains several notes, rests, beams and/or chords.
+   <P>
+   example:
+   <PRE>
+    <FONT size="2">
+    &lt;segment&gt;
+      &lt;subsegment position="one"&gt;
+        &lt;note beat="quarter" name="f"/&gt; 
+        &lt;note beat="eighth"  name="g"/&gt; 
+        &lt;chord&gt;
+          &lt;note beat="sixteenth" name="a"/&gt;
+          &lt;note beat="quarter" name="b"/&gt;
+          &lt;/chord&gt;
+        &lt;rest size="half"/&gt;
+      &lt;/subsegment&gt;
+    &lt;/segment&gt;
+    </FONT>
+   </PRE>
+
+   If you take a look at our <A HREF="/trends/music.dtd">complete DTD
+   specification</A> of MusicML you'll notice that a DTD specification is
+   relatively easy to make and is an extremely short definition. This shows
+   the exact strength of XML.
+   <P>
+   If you look more carefully at our DTD you'll notice one of the drawbacks
+   of an XML DTD definition. It is strongly based on a <I>hierarchical</I>
+   definition. This reflects the tension between strongly typed formats and
+   great flexibility. For instance defining a DTD for curves from one note
+   in the first subsegment to another note in the second subsegment is much
+   more difficult.
+
+
+   </BLOCKQUOTE>
+
+   <FONT COLOR="#3F3552">Browser implementation</FONT>
+   <BLOCKQUOTE> 
+    Based on the DTD specification, popular internet browsers can check
+    wether a document they parse are well-formed. A browser however doesn't know
+     how it should represent data formatted with elements defined
+    in the DTD. Currently there is no standard available for
+    representation (some work is done based on style sheets, but that
+    wouldn't satisfy the needs for MusicML ( see
+    <A HREF="http://www.w3.org/Style/" target="_new">http://www.w3.org/Style/</A>).
+
+    To overcome this problem you have two write your
+    own browser. We wrote a MusicML browser based on Microsoft's
+    XML parser which you can find at <A HREF="http://www.microsoft.com/workshop/author/xml/parser/" target="_new">
+    http://www.microsoft.com/workshop/author/xml/parser/</A>
+
+    Based on this parser we wrote our browser as an Java applet
+    which draws all the components on the screen.
+    <P>
+    Writing such a browser is relatively easy Java programming, feel
+    free to take a look at the complete <A HREF="/trends/MusicML.java">source</A>.
+    <P>
+    A huge withdraw when you write applets that parse your XML
+    document is that you cannot take advantage of the default formatting
+    that is done by the browser itself. If you would implement something
+    like:
+    <PRE>
+    <FONT size="2">
+      &lt;TABLE&gt
+       &lt;TR&gt&lt;TD&gt&lt;musicrow&gt&lt;/musicrow&gt&lt;/TD&gt&lt;/TR&gt
+       &lt;TR&gt&lt;TD&gt&lt;musicrow&gt&lt;/musicrow&gt&lt;/TD&gt&lt;/TR&gt
+      &lt;/TABLE&gt
+     </FONT>
+    </PRE>
+    you are forced to write a representation of the table tag yourself.
+    Therefore tight interaction between applets that implement a DTD and
+    existing DTD implementations are needed.
+   </BLOCKQUOTE>
+
+   <FONT COLOR="#3F3552">Conclusion</FONT>
+   <BLOCKQUOTE> 
+     XML is a relatively simple Meta Language suitable for defining
+     strongly typed based documents. It will fulfill the growing
+     demand for better and more intelligent specification formats.
+     <P>
+     Implementing a browser for formats like MusicML is relatively
+     easy in a language like Java. There is however need for a
+     tight interaction between new and existing DTD implementations. 
+   </BLOCKQUOTE>
+
+   <P ALIGN=RIGHT> <A HREF="mailto:jeroen@tcf.nl">Jeroen van Rotterdam</A>
+
+   </TD>
+  
+   <TD WIDTH="40" VALIGN=TOP>
+	 
+   </TD>
+</TR>
+</TABLE>
+
+<!-- #INCLUDE "../_general/trailer.html" -->
+<TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="620"> 
+<TR>
+
+  <TD VALIGN=TOP WIDTH="170">
+  <IMG SRC="/images/wit.gif" ALIGN=LEFT WIDTH=170 HEIGHT=30> 
+  </TD>
+
+  <TD VALIGN=TOP WIDTH="410">
+  
+  </TD>
+
+  <TD VALIGN=TOP WIDTH="40">
+  
+  </TD>
+</TR>
+
+<TR>
+  <TD VALIGN=TOP WIDTH="170">
+  
+  </TD>
+
+  <TD VALIGN=TOP WIDTH="410">
+  <A HREF="/info/index2.html"><IMG SRC="/images/menu_onder_info.gif" ALT="informatie" 
+     ALIGN=LEFT HSPACE=1 WIDTH=79 HEIGHT=16 BORDER=0></A> 
+  <A HREF="/klanten/index2.html"><IMG SRC="/images/menu_onder_klanten.gif" ALT="klanten" 
+     ALIGN=LEFT HSPACE=1 WIDTH=79 HEIGHT=16 BORDER=0></A> 
+  <A HREF="/producten/index2.html"><IMG SRC="/images/menu_onder_prod.gif" ALT="producten" 
+     ALIGN=LEFT HSPACE=1 WIDTH=79 HEIGHT=16 BORDER=0></A> 
+  <A HREF="/projecten/index2.html"><IMG SRC="/images/menu_onder_projec.gif" ALT="projecten" 
+     ALIGN=LEFT HSPACE=1 WIDTH=79 HEIGHT=16 BORDER=0></A> 
+  <A HREF="/trends/index2.html"><IMG SRC="/images/menu_onder_trends.gif" ALT="trends" 
+     ALIGN=LEFT HSPACE=1 WIDTH=79 HEIGHT=16 BORDER=0></A> 
+  </TD>
+ 
+  <TD VALIGN=TOP WIDTH="40">
+  
+  </TD>
+</TR>
+
+<TR>
+  <TD VALIGN=TOP WIDTH="170">
+  
+  </TD>
+
+  <TD VALIGN=TOP WIDTH="410">
+  <CENTER>
+  <FONT SIZE=-1>
+  <BR>
+  The Connection Factory &copy; 1997 
+  </FONT>
+  </CENTER>
+  </TD>
+  
+  <TD VALIGN=TOP WIDTH="40">
+  
+  </TD>
+</TR>
+
+</TABLE>
+
+<!-- #END "../_general/trailer.html" -->
+
+</BODY>
+
+</HTML>

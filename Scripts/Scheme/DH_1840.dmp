@@ -1,0 +1,169 @@
+DH: Logtime 08/16/1999-01:50 - Machine=BRIANBEC36 - PID=1840
+
+
+*********** Heap 00130000 Information ********************
+
+    Flags: 00000002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00013568
+    Bytes Committed: 00014000
+    Total FreeSpace: 00000a98
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 00230000 Information ********************
+
+    Flags: 00008000
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 000026a0
+    Bytes Committed: 00004000
+    Total FreeSpace: 00001960
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 002F0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 0000d328
+    Bytes Committed: 00013000
+    Total FreeSpace: 00005cd8
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 00440000 Information ********************
+
+    Flags: 00001003
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00005198
+    Bytes Committed: 00006000
+    Total FreeSpace: 00000e68
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 00CB0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00002d60
+    Bytes Committed: 00003000
+    Total FreeSpace: 000002a0
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 010C0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00006e90
+    Bytes Committed: 00008000
+    Total FreeSpace: 00001170
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 011D0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00007410
+    Bytes Committed: 00008000
+    Total FreeSpace: 00000bf0
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 011E0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 000024a0
+    Bytes Committed: 00100000
+    Total FreeSpace: 000fdb60
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 012E0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00006e90
+    Bytes Committed: 00008000
+    Total FreeSpace: 00001170
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 013F0000 Information ********************
+
+    Flags: 00001004
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00000680
+    Bytes Committed: 00007000
+    Total FreeSpace: 00006980
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 01A90000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00006e90
+    Bytes Committed: 00008000
+    Total FreeSpace: 00001170
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)
+
+
+*********** Heap 01DC0000 Information ********************
+
+    Flags: 00001002
+    Number Of Entries: 0
+    Number Of Tags: 0
+    Bytes Allocated: 00006e90
+    Bytes Committed: 00008000
+    Total FreeSpace: 00001170
+    Number of Virtual Address chunks used: 0
+    Address Space Used: 00000000
+    Entry Overhead: 8
+    Creator:  (Backtrace00000)

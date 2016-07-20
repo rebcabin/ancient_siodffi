@@ -1,0 +1,30 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following demonstrates a shortened version of the request
+    above.  Tags end with a generic 'slash-broket' symbol (respected
+    by the MSXML parser -- not necessarily by all parsers) and implied
+    NULLs for stateParameters that don't have an explicit value.
+
+E N D   C O M M E N T -->
+
+<permission
+    permissionClass = "FileIOPermission"
+    disposition     = "request"
+    targetModule    = "FileStuff.pe"
+    targetComponent = "FileUtilComponent"
+    targetClass     = "FileUtilities2"
+    >
+    <stateData>
+        <stateParameter name = "IncludeRead">
+            *\MergeSource\*.txt;*\MergeSource\*.doc           </>
+        <stateParameter name = "ExcludeRead">
+            *\MergeSource\*_sys.txt                           </>
+        <stateParameter name = "IncludeWrite">
+            *\MergeDestination\*.txt;*\MergeDestination\*.doc </>
+        <stateParameter name = "ExcludeWrite">
+            *\MergeDestination\*_sys.txt                      </>
+</> </>

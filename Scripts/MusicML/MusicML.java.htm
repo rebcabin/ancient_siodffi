@@ -1,0 +1,980 @@
+/*****************************************************************
+
+   MusicMl by the Connection Factory, March 5, 1998
+
+                   (c) Copyright notice
+
+   A simple MusicML Applet wich reads a MusicML document
+   parses it with the microsoft xml parser and then
+   parses the document tree to display it on a lightweight
+   component.
+
+   The com.ms.xml.. classes are by Microsoft and can be found
+   at http://www.microsoft.com/
+
+   MusicML (c) Copyright by The Connection Factory B.V.
+                            Grotekerkplein 38
+                            3011 GE Rotterdam
+                            the Netherlands
+                            +31 10 4046870
+                            info@tcf.nl
+
+   You may use this code for educational purposes only.
+   Feel free to experiment with it.
+
+   Commercial usage of any part of MusicML including its
+   java classes and DTD description is prohibited.
+
+   If you do want to use MusicML for commercial usage
+   contact The Connection Factory at the above mentioned
+   address
+
+*****************************************************************/
+
+import com.ms.xml.parser.*             ;
+import com.ms.xml.om.Document          ;
+import com.ms.xml.om.Element           ;
+import com.ms.xml.util.XMLOutputStream ;
+import com.ms.xml.util.Name            ;
+import com.ms.xml.om.ElementEnumeration;
+import com.ms.xml.om.ElementImpl       ;
+import com.ms.xml.util.Name            ;
+import com.ms.xml.om.ElementFactory    ;
+
+import java.util.Enumeration           ;
+import java.io.*                       ;
+import java.io.PrintStream             ;
+import java.net.*                      ;
+import java.awt.*                      ;
+import java.util.Vector                ;
+import java.awt.event.*                ;
+import java.applet.*                   ;
+
+
+/*
+ * the MusicML applet class
+ */
+
+public class MusicML extends Applet {
+
+    public void init(){
+
+      xmlFile  = getParameter("XMLFILE");
+      rowWidth = Integer.parseInt( getParameter("ROWWIDTH") );
+
+      if (xmlFile != null) {
+
+        Document d = null;
+        try {
+
+          // create the xml url
+          URL url = new URL( xmlFile );
+
+          // create the xml document
+          d = new Document();
+          InputStream instream = null;
+          d.setCaseInsensitive(caseInsensitive);
+          d.setLoadExternal(loadexternal);
+
+          // load and parse the document
+          d.load(url);
+
+          //garbage collection
+          System.gc();
+        } 
+        catch (Exception e) {
+          System.out.println(e);
+        }
+
+        //display our music document
+        if (d != null) {
+          setLayout( new BorderLayout() );
+          Music musicDocument = new Music(d, rowWidth);
+          add( "Center", musicDocument );
+        }
+      }
+    }
+
+    // locals
+    int     rowWidth               ;
+    String  xmlFile                ;
+    boolean caseInsensitive = false;
+    boolean loadexternal    = true ;
+}
+
+
+/*
+ *  Our MusicML lightweight
+ */
+
+class Music extends Canvas{
+
+
+  /*
+   * local variables
+   */
+
+  ElementImpl e    = null        ;
+
+  /*
+   * staff cursors
+   */
+  int[]       locx = new int[2]  ;
+  int[]       locy = new int[2]  ;
+
+
+  /*
+   * size variables
+   * a lot of sizing is done relatively to the linespacing parameter
+   */
+  int         rowheight   = 200  ;  // spacing between 2 musicrows
+  int         rowlength   = 600  ;  // default length
+  int         linespacing = 6    ;  // space between to lines on a staff     
+  int         notespacing = 3    ;  // space between to successive notes     
+  int         innerspace  = 80   ;  // space between first and second staff    
+  int         stok        = 20   ;  // size of the line attached to a single note    
+
+  Vector      coordinates = null ;  // coordinate memory for beams
+  int         lineStart_x = 0    ;  
+  int         lineStart_y = 0    ;
+
+  boolean     first              ;
+  boolean     treble             ;  
+  boolean     doublesize = false ;
+
+  int         pos = 0            ;
+  int         factor2            ;
+  boolean     dot                ;
+
+  int         maxYPos            ;  
+
+  /*
+   *  Fonts
+   */
+  Font        textFont     = new Font( "Arial", Font.BOLD, 10 );
+  Font        dynamicsFont = new Font( "Arial", Font.ITALIC, 14 );
+
+
+  /*
+   * constructor
+   */
+  public Music( ElementImpl e, int rowlength ){
+     this.e         = e        ;
+     this.rowlength = rowlength;
+     setBackground( Color.white );
+  }
+
+  /*
+   * paint, draw the complete document
+   */
+  public void paint( Graphics g ){
+    if( e != null ){
+
+      // several inits
+      locx[0] = 0;
+      locx[1] = 0;
+      locy[0] = 30;
+      locy[1] = 30+innerspace;
+      first   = true;
+      treble  = false;
+      g.setFont( textFont );
+
+      // display the Element implementation
+      displayTree( g, e, false, false );
+    }
+  }
+
+
+  /*
+   * displayTree, reads the entire Element Implementation
+   * and draws it on the Graphics input.
+   */
+
+  public void displayTree( Graphics lg, ElementImpl e, boolean chordpending, boolean beampending ){
+
+
+    boolean whole = false;
+
+    if( e.getTagName() != null ){
+
+      /*****************************************************
+       *                                                   *
+       *     process the tags defined in the DTD           *
+       *                                                   *
+       *****************************************************/
+
+
+      /**********************
+       * <musicrow> element *
+       **********************/
+
+      if( e.getTagName().getName().equals("musicrow") ){
+          locx[0] = 0;
+          locx[1] = 0;
+          doublesize = false;
+
+          if( !first ){
+              locy[0] = locy[0] + rowheight;
+              locy[1] = locy[1] + rowheight;
+          } else {
+            first = false;
+          }
+
+
+          for( int i=0; i<5; i++){
+            lg.drawLine( locx[0], locy[0]+i*linespacing, locx[0]+rowlength, locy[0]+i*linespacing );
+          }
+
+          if( e.getAttribute("size").toString().equals("two") ){
+            doublesize = true;
+            for( int i=0; i<5; i++){
+              lg.drawLine( locx[1], locy[1] + i*linespacing, locx[1]+rowlength, locy[1] + i*linespacing );
+            }
+          }
+
+          // begin and end vertical bar
+          lg.drawLine( locx[0], locy[0], locx[0], locy[0]+innerspace + 4*linespacing );
+          lg.drawLine( locx[0]+rowlength, locy[0], locx[0]+rowlength, locy[0]+innerspace + 4*linespacing );
+
+      }
+
+      /***********************
+       * <entrypart> element *
+       ***********************/
+      if( e.getTagName().getName().equals("entrypart") ){
+
+         pos = 0;
+
+         if( e.getAttribute("position").toString().equals("two") ){
+           pos = 1;
+         }        
+
+         locx[pos] += 5;
+
+         if( e.getAttribute("cleff").toString().equals("bass") ){
+           drawKey(locx[pos], locy[pos]-3*notespacing, true, lg);
+         } else {
+           if( e.getAttribute("cleff").toString().equals("treble") ){
+             drawKey(locx[pos], locy[pos], false, lg);
+           }
+         }
+
+         locx[pos] +=15;
+      }
+
+
+
+      /************************
+       * <subsegment> element *
+       ************************/
+      if( e.getTagName().getName().equals("subsegment") ){
+         pos = 0;
+         if( e.getAttribute("position").toString().equals("two") ){
+           pos = 1;
+         } 
+      }
+
+      
+      /**************************************
+       * <molkruis> element , sharp or flat *
+       **************************************/
+
+      if( e.getTagName().getName().equals("molkruis") ){
+
+        locx[pos] += 7;
+
+        String level = "zero";
+        if( e.getAttribute("level") != null ){
+          level = e.getAttribute("level").toString();
+        }
+
+        String name = "g";
+        if( e.getAttribute("name") != null ){
+          name = e.getAttribute("name").toString();
+        }
+
+        int type = 0;
+        String what = e.getAttribute("notetype").toString();
+        if( what.equals("sharp") ){
+          type = 1;
+        }
+
+        factor2  = 0;
+        dot      = true;
+        int ypos = 0;
+
+        ypos = calcYPosition( level, name );
+
+        drawMolKruis( locx[pos], ypos, type, lg );
+      }
+
+
+      /***********************
+       * <rest>      element *
+       ***********************/
+
+      if( e.getTagName().getName().equals("rest") ){
+        locx[pos] += 15;
+        drawRest(lg, locx[pos], locy[pos], e.getAttribute("size").toString() );
+      }
+
+      /***********************
+       * <chord>     element *
+       ***********************/
+      if( e.getTagName().getName().equals("chord") ){
+            locx[pos] += 15;
+            chordpending = true;
+            maxYPos = locy[pos];
+      }
+
+      /***********************
+       * <beam> element      *
+       ***********************/
+      if( e.getTagName().getName().equals("beam") ){
+            beampending = true;
+            coordinates = new Vector();
+      }
+
+
+      /***********************
+       * <note>      element *
+       ***********************/
+      if( e.getTagName().getName().equals("note") ){
+
+          if( ! chordpending ){
+            locx[pos] += 15;
+          }
+
+          String level = "zero";
+          if( e.getAttribute("level") != null ){
+            level = e.getAttribute("level").toString();
+          }
+
+          String beat = "quarter";
+          if( e.getAttribute("beat") != null ){
+            beat = e.getAttribute("beat").toString();
+          }
+
+          String notetype = "";
+          if( e.getAttribute("notetype") != null ){
+            notetype = e.getAttribute("notetype").toString();
+          }
+
+          String name = "g";
+          if( e.getAttribute("name") != null ){
+            name = e.getAttribute("name").toString();
+          }
+
+          String dynamics = "";
+          if( e.getAttribute("dynamics") != null ){
+            dynamics = e.getAttribute("dynamics").toString();
+          }
+
+          factor2  = 0;
+          dot      = true;
+          int ypos = 0;
+
+          ypos = calcYPosition( level, name );
+
+
+          // position for text above
+          if( !chordpending ){
+            maxYPos = ypos;
+          } else {
+            if( ypos < maxYPos ){
+              maxYPos = ypos;
+            }
+          }
+
+          // first if there is a type draw it
+          if( notetype.equals("sharp") ){     //#
+             drawMolKruis( locx[pos], ypos, 1, lg );
+             locx[pos] += 7;
+          } else if ( notetype.equals("flat") ){  //mol
+             drawMolKruis( locx[pos], ypos, 0, lg );
+             locx[pos] += 7;
+          }
+
+
+          //draw supporting lines for high notes
+          if( factor2 < 0 ){
+            int startshift = notespacing;
+            if( dot ){
+              startshift = linespacing;
+            }
+            for( int i=ypos+startshift; i<locy[pos]; i += linespacing ){
+              lg.drawLine( locx[pos]-2, i, locx[pos]+linespacing+2, i );
+            }
+          }
+
+          //draw supporting lines for low notes
+          if( factor2 >= 0 ){
+            int startshift = notespacing;
+            if( dot ){
+              startshift = 0;
+            }
+            for( int i=ypos+startshift; i>locy[pos]; i -= linespacing ){
+              lg.drawLine( locx[pos]-2, i, locx[pos]+linespacing+2, i );
+            }
+          }
+
+
+          if( beat.equals("quarter") || beat.equals("eighth") || beat.equals("sixteenth") || beat.equals("threequarter") ){
+            lg.fillOval( locx[pos], ypos, linespacing,linespacing );
+            if( beat.equals("threequarter") ){
+
+              // dot means note is between 2 lines
+              // not dot means note is on the line
+              if( dot ){
+                lg.fillRect( locx[pos]+8, ypos+2, 2,2 );
+              } else {
+                lg.fillRect( locx[pos]+8, ypos, 2,2 );
+              }
+            }
+          } else if ( beat.equals("half") ){
+            lg.drawOval( locx[pos], ypos, linespacing,linespacing );
+          } else if ( beat.equals("whole") ){
+            whole = true;
+            lg.drawOval( locx[pos], ypos, linespacing,linespacing );
+            lg.drawOval( locx[pos]+1, ypos+1, linespacing-2,linespacing-2 );
+          }
+
+
+          // down or up ?
+          // beams, and chords are allways drawn down
+
+          if( chordpending || beampending || (ypos < locy[pos]) ){
+             lineStart_x = locx[pos];
+             lineStart_y = ypos+notespacing;
+
+             // draw line for non beams and non whole notes
+             if( !beampending && !whole ){
+               lg.drawLine( lineStart_x, lineStart_y, lineStart_x, lineStart_y+stok );
+
+               // draw single flag 
+               if( beat.equals("eighth") ){
+                   drawFlag( lg, lineStart_x, lineStart_y+stok, false );
+               }
+
+               // draw double flag
+               if( beat.equals("sixteenth") ){
+                   drawFlag( lg, lineStart_x, lineStart_y+stok, false );
+                   drawFlag( lg, lineStart_x, lineStart_y+stok-2*notespacing, false );
+               }
+
+             }
+          } else {
+             lineStart_x = locx[pos]+linespacing;
+             lineStart_y = ypos+notespacing;
+
+             // draw line for non beam
+             if( !beampending && !whole ){
+               lg.drawLine( lineStart_x, lineStart_y, lineStart_x, lineStart_y-stok );
+
+               // draw single flag
+               if( beat.equals("eighth") ){
+                   drawFlag( lg, lineStart_x, lineStart_y-stok, true );
+               }
+
+               // draw double flag
+               if( beat.equals("sixteenth") ){
+                   drawFlag( lg, lineStart_x, lineStart_y-stok, true );
+                   drawFlag( lg, lineStart_x, lineStart_y-stok+2*notespacing, true );
+               }
+             }
+          }
+
+          if( beampending ){
+            // store x,y coordinate 
+            coordinates.addElement( new coordinate( lineStart_x, lineStart_y ) );
+          }
+
+          if( !dynamics.equals("") ){
+            Font savefont = lg.getFont();
+            lg.setFont( dynamicsFont );
+            lg.drawString( dynamics, locx[pos], locy[pos]+50 );
+            lg.setFont( savefont );
+          }
+
+      }
+
+    }
+
+   /********************************************************************
+    * recursively displaying the subtree                               *
+    ********************************************************************/
+
+    for (ElementEnumeration en = new ElementEnumeration(e); en.hasMoreElements(); ){
+        ElementImpl child = (ElementImpl)en.nextElement();
+        displayTree(lg, child, chordpending, beampending);
+    }
+
+
+
+    /******************************************************************
+       /     / \      EEEE L    EEEE M   M EEEE N  N TTT  SSSS
+      /     /   \     E    L    E    M M M E    NN N  T  S
+     /     /     \    EE   L    EE   M   M EE   N NN  T   SSS
+     \    /      /    E    L    E    M   M E    N NN  T      S
+      \  /      /     EEEE LLLL EEEE M   M EEEE N  N  T  SSSS
+     ******************************************************************/
+
+    // </> tags
+
+
+    if( e.getTagName() != null ){
+
+      /*****************************
+       * </entrypart>      element *
+       *****************************/
+      if( e.getTagName().getName().equals("entrypart") ){
+
+         locx[pos] += 20;
+
+         String rythm = e.getAttribute("rythm").toString();
+
+         Font saveFont = lg.getFont();
+         lg.setFont( new Font( saveFont.getName(), Font.BOLD, saveFont.getSize()+3 ) );
+
+         if( rythm.equals("threequarter") ){
+           lg.drawString( "3",locx[pos], locy[pos] + 4 *notespacing  );
+           lg.drawString( "4",locx[pos], locy[pos] + 8 *notespacing  );
+         }
+         if( rythm.equals("twoquarter") ){
+           lg.drawString( "3",locx[pos], locy[pos] + 4 *notespacing );
+           lg.drawString( "4",locx[pos], locy[pos] + 8 *notespacing );
+         }
+         if( rythm.equals("sixeight") ){
+           lg.drawString( "6",locx[pos], locy[pos] + 4 *notespacing );
+           lg.drawString( "8",locx[pos], locy[pos] + 8 *notespacing );
+         }
+         if( rythm.equals("half") ){
+           lg.drawString( "1",locx[pos], locy[pos] + 4 *notespacing );
+           lg.drawString( "2",locx[pos], locy[pos] + 8 *notespacing );
+         }
+         if( rythm.equals("fivequarter") ){
+           lg.drawString( "5",locx[pos], locy[pos] + 4 *notespacing );
+           lg.drawString( "4",locx[pos], locy[pos] + 8 *notespacing );
+         }
+
+         lg.setFont( saveFont );
+         locx[pos] += 15;
+
+      }
+
+      /*****************************
+       * </chord> </note>  element *
+       *****************************/
+      // draw text above
+      if( e.getTagName().getName().equals("chord") ||
+          e.getTagName().getName().equals("note")       ){
+
+
+         if( e.getAttribute("info") != null ){
+           String info = e.getAttribute("info").toString();
+
+           //offset -- distance between top note and text
+           maxYPos -= 6;
+
+           if( maxYPos > locy[pos]-2*linespacing ){
+             maxYPos = locy[pos]-2*linespacing;
+           }
+           lg.drawString( info, locx[pos], maxYPos );
+         }
+      }
+
+
+      /***********************
+       * </segment>  element *
+       ***********************/
+      // draw vertical line en shift xposition to max of both
+      if( e.getTagName().getName().equals("segment") ){
+        if( locx[0] > locx[1] ){
+          locx[0] += 15;
+          locx[1] = locx[0];
+        } else {
+          locx[1] += 15;
+          locx[0] = locx[1];
+        }
+        lg.drawLine( locx[0], locy[0], locx[0], locy[0]+innerspace + 4*linespacing );
+      }
+
+      /***********************
+       * <beam>      element *
+       ***********************/
+      if( e.getTagName().getName().equals("beam") ){
+         beampending = false;
+
+         int maxy = 0;
+
+         for( int i=0; i<coordinates.size(); i++ ){
+           if( ((coordinate)coordinates.elementAt( i )).y > maxy ){
+             maxy = ((coordinate)coordinates.elementAt( i )).y;
+           }
+         }
+
+         String size = "single";
+         if( e.getAttribute("size") != null ){
+           size = e.getAttribute("size").toString();
+           if( size.equals("double") ){
+             maxy += 7;
+           }
+           if( size.equals("triple") ){
+             maxy += 14;
+           }
+         }
+         
+
+         for( int i=0; i<coordinates.size(); i++ ){
+           int xx = ((coordinate)coordinates.elementAt( i )).x;
+           int yy = ((coordinate)coordinates.elementAt( i )).y;
+           lg.drawLine( xx, yy, xx, maxy+stok );
+         }
+         int x1 =  ((coordinate)coordinates.elementAt(0)).x ;
+         int x2 =  ((coordinate)coordinates.elementAt(coordinates.size()-1)).x;
+         lg.fillRect( x1, maxy+stok-2 , x2-x1 , 3 );
+
+         if(  size.equals("double") ){
+           lg.fillRect( x1, maxy+stok-7, x2-x1 , 3 );
+         }
+
+         if(  size.equals("triple") ){
+           lg.fillRect( x1, maxy+stok-7, x2-x1 , 3 );
+           lg.fillRect( x1, maxy+stok-12, x2-x1 , 3 );
+         }
+
+         coordinates = null;
+      }
+
+      chordpending = false;
+    }
+  }
+
+
+  /*
+   * calculate Y position of note
+   */
+  public int calcYPosition( String level, String name ){
+
+    int factor1 = 0;
+ 
+    if( name.equals("a") ){
+      factor1 = 4;
+    } else if ( name.equals("b") ){
+      factor1 = 3;
+      dot = false;
+    } else if ( name.equals("c") ){
+      factor1 = 9;
+      dot = false;
+    } else if ( name.equals("d") ){
+      factor1 = 8;
+    } else if ( name.equals("e") ){
+      factor1 = 7;
+      dot = false;
+    } else if ( name.equals("f") ){
+      factor1 = 6;
+    } else if ( name.equals("g") ){
+      factor1 = 5;
+      dot = false;
+    }
+
+    if( level.equals("zero") ){
+      factor2 = 0;
+    } else if ( level.equals("min1") ){
+      factor2 = 1;
+      dot = ! dot;
+    } else if ( level.equals("min2") ){
+      factor2 = 2;
+    } else if ( level.equals("min3") ){
+      factor2 = 3;
+      dot = ! dot;
+    } else if ( level.equals("plus1") ){
+      factor2 = -1;
+      dot = ! dot;
+    } else if ( level.equals("plus2") ){
+      factor2 = -2;
+    } else if ( level.equals("plus3") ){
+      factor2 = -3;
+      dot = ! dot;
+    }
+
+    return( locy[pos] + factor1*notespacing + 7*notespacing*factor2 );
+  }
+
+
+  /*
+   * draw flag
+   */
+
+  public void drawFlag( Graphics lg, int x, int y, boolean down ){
+
+    int[] xpoints = new int[5];
+    int[] ypoints = new int[5];
+
+    if( down ){
+      for( int i=0; i<2; i++ ){
+
+        xpoints[0] = x  ;
+        xpoints[1] = x + 1;
+        xpoints[2] = x + 4;
+        xpoints[3] = x + 5;
+        xpoints[4] = x + 4;
+
+        ypoints[0] = i + y  ;
+        ypoints[1] = i + y + 4;
+        ypoints[2] = i + y + 6;
+        ypoints[3] = i + y + 10;
+        ypoints[4] = i + y + 14;
+
+        drawMyPolyline( xpoints, ypoints, 4, lg );
+      }
+    } else {
+      for( int i=0; i<2; i++ ){
+
+        xpoints[0] = x  ;
+        xpoints[1] = x + 1;
+        xpoints[2] = x + 4;
+        xpoints[3] = x + 5;
+        xpoints[4] = x + 4;
+
+        ypoints[0] = y - i  ;
+        ypoints[1] = y - i - 4;
+        ypoints[2] = y - i - 6;
+        ypoints[3] = y - i - 10;
+        ypoints[4] = y - i - 14;
+
+        drawMyPolyline( xpoints, ypoints, 4, lg );
+      }
+    }
+  }
+
+  /*
+   * this ain't funny but this method became public
+   * in jdk1.1.4, to become jdk1.1.2 compatible we
+   * will provide it here
+   */
+  public void drawMyPolyline( int[] xpoints, int[] ypoints, int npoints, Graphics g ){
+    for( int i=0; i<npoints-1; i++ ){
+      g.drawLine( xpoints[i], ypoints[i], xpoints[i+1], ypoints[i+1] );
+    }
+  }
+
+
+  /*
+   * draw rests
+   */
+  public void drawRest( Graphics lg, int locx, int locy, String size ){
+
+    if( size.equals("whole") ){
+      lg.fillRect( locx, 1+locy+4*notespacing, 2*notespacing, notespacing );
+    }
+
+    if( size.equals("half") ){
+      lg.fillRect( locx, 1+locy+3*notespacing, 2*notespacing, notespacing );
+    }
+
+    if( size.equals("quarter") ){
+      int[] xpoints = new int[13];
+      int[] ypoints = new int[13];
+      xpoints[0] =  locx   ;
+      xpoints[1] =  locx+6 ;
+      xpoints[2] =  locx+4 ;
+      xpoints[3] =  locx+6 ;
+      xpoints[4] =  locx+2 ;
+      xpoints[5] =  locx+2 ;
+      xpoints[6] =  locx+4 ;
+      xpoints[7] =  locx   ;
+      xpoints[8] =  locx   ;
+      xpoints[9] =  locx+2 ;
+      xpoints[10]=  locx   ;
+      xpoints[11]=  locx+2 ;
+      xpoints[12]=  locx   ;
+
+      ypoints[0] = 2*notespacing+locy    ;
+      ypoints[1] = 2*notespacing+locy+4  ;
+      ypoints[2] = 2*notespacing+locy+8  ;
+      ypoints[3] = 2*notespacing+locy+10 ;
+      ypoints[4] = 2*notespacing+locy+12 ;
+      ypoints[5] = 2*notespacing+locy+14 ;
+      ypoints[6] = 2*notespacing+locy+16 ;
+      ypoints[7] = 2*notespacing+locy+14 ;
+      ypoints[8] = 2*notespacing+locy+12 ;
+      ypoints[9] = 2*notespacing+locy+10 ;
+      ypoints[10]= 2*notespacing+locy+8  ;
+      ypoints[11]= 2*notespacing+locy+4  ;
+      ypoints[12]= 2*notespacing+locy    ;
+
+      lg.fillPolygon( xpoints, ypoints, 13 );
+    }
+
+    if( size.equals("eighth") ){
+      lg.fillOval( locx+2, locy+3*notespacing, notespacing,notespacing );
+      lg.drawLine( locx+2*notespacing, locy+3*notespacing, locx, locy+7*notespacing );
+      lg.drawLine( locx+2*notespacing+1, locy+3*notespacing, locx+1, locy+7*notespacing );
+    }
+
+    if( size.equals("sixteenth") ){
+      lg.fillOval( locx+2, locy+3*notespacing, notespacing,notespacing );
+      lg.fillOval( locx-2, locy+5*notespacing, notespacing,notespacing );
+      lg.drawLine( locx+2*notespacing, locy+3*notespacing, locx, locy+7*notespacing );
+      lg.drawLine( locx+2*notespacing+1, locy+3*notespacing, locx+1, locy+7*notespacing );
+    }
+
+  }
+
+  /*
+   * draw flat or sharp
+   */
+  public void drawMolKruis( int x, int y, int type, Graphics g ){
+     switch( type ){
+
+       //mol
+       case(0):
+
+         y -= 5;
+
+         //    .
+         //    .
+         //    .
+         //    .
+         //    .
+         //    .
+         //    ...
+         //    . ..
+         //    .  ..
+         //    .  ..
+         //    . ..
+         //    ...
+
+         g.drawLine( x, y, x, y+11 );
+
+         g.drawLine( x+1,y+6,x+2,y+6 );
+         g.drawLine( x+2,y+7,x+3,y+7 );
+         g.drawLine( x+3,y+8,x+4,y+8 );
+
+         g.drawLine( x+3,y+9,x+4 ,y+9 );
+         g.drawLine( x+2,y+10,x+3,y+10 );
+         g.drawLine( x+1,y+11,x+2,y+11 );
+       break;
+
+       case(1):
+
+         y -= 3;
+
+         //       .
+         //    .  .
+         //    . ...
+         //   ......
+         //   ... .
+         //    .  .
+         //    .  .
+         //    .  .
+         //    . ...
+         //   ......
+         //   ... .
+         //    .  .
+         //    .
+
+         g.drawLine( x+1, y+1, x+1, y+12 );
+         g.drawLine( x+4, y  , x+4, y+11 );
+         g.fillRect( x  ,y+3, 3, 2 );
+         g.fillRect( x+3,y+2, 3, 2 );
+         g.fillRect( x  ,y+9, 3, 2 );
+         g.fillRect( x+3,y+8, 3, 2 );
+
+
+       break;
+     }
+  }
+
+  /*
+   * draw the Cleff
+   */
+  public void drawKey( int x, int y, boolean g_key, Graphics g ){
+    if( g_key ){
+      g.drawLine( x+8, y+1, x+8, y+4 );
+      g.drawLine( x+7, y+4, x+7, y+17 );
+      g.drawLine( x+8, y+14, x+8, y+25 );
+      g.drawLine( x+7, y+21, x+11, y+21 );
+      g.drawLine( x+6, y+22, x+12, y+22 );
+      g.drawLine( x+5, y+23, x+13, y+23 );
+      g.fillRect( x+4, y+24, 2, 4 );
+      g.fillRect( x+13,y+24, 2, 2 );
+      pixel(      x+6 ,y+24, g );
+      pixel(      x+12,y+24, g );
+      g.drawLine( x+14, y+26, x+14, y+28 );
+      g.drawLine( x+14, y+29, x+11, y+32 );
+      g.drawLine( x+9 , y+26, x+9 , y+32 );
+      g.drawLine( x+10, y+32, x+10, y+38 );
+      pixel( x+9, y+38 , g );
+      g.drawLine( x+8, y+39, x+5, y+39 );
+      g.fillRect( x+2, y+35, 4, 3 );
+      g.fillRect( x+3, y+34, 2, 5 );
+      g.drawLine( x+6, y+28, x+7, y+28 );
+      g.drawLine( x+6, y+32, x+9, y+32 );
+      g.drawLine( x+4, y+31, x+6, y+31 );
+      g.drawLine( x+3, y+30, x+4, y+30 );
+      g.fillRect( x+2, y+28, 2, 2 );
+      g.fillRect( x+1, y+22, 2, 6);
+      g.drawLine( x+2, y+20, x+6, y+16 );
+      g.drawLine( x+2, y+21, x+10, y+13 );
+      g.drawLine( x+3, y+22, x+13, y+11 );
+      g.drawLine( x+7, y+18, x+12, y+12 );
+      g.drawLine( x+9, y+16, x+12, y+13 );
+      g.drawLine( x+13,y+5,  x+13, y+11);
+      g.drawLine( x+12, y+3, x+12, y+4 );
+      g.drawLine( x+11, y+1, x+11, y+2 );
+      g.drawLine( x+9, y, x+10, y+1 );
+
+    } else {
+      g.fillRect( x, y+5, 5, 3 );
+      g.fillRect( x+1, y+4, 3, 5 );
+      g.drawLine( x+1, y+3, x+2, y+3 );
+      g.drawLine( x+2, y+2, x+5, y+2 );
+      g.drawLine( x+4, y+1, x+8, y+1 );
+      g.drawLine( x+8, y+2, x+9, y+2 );
+      g.drawLine( x+9, y+3, x+10, y+3 );
+      g.drawLine( x+10, y+4, x+11, y+4 );
+      g.drawLine( x+10, y+5, x+12, y+5 );
+      g.fillRect( x+11, y+6, 3, 7 );
+      g.fillRect( x+10, y+13, 3, 2 );
+      g.drawLine( x+9, y+15, x+11, y+15 );
+      g.drawLine( x+8, y+16, x+10, y+16 );
+      g.drawLine( x+7, y+17, x+9, y+17 );
+      g.drawLine( x+6, y+18, x+7, y+18 );
+      g.drawLine( x+5, y+19, x+6, y+19 );
+      g.drawLine( x+3, y+20, x+5, y+20 );
+      g.drawLine( x, y+21, x+3, y+21 );
+
+      g.drawLine( x+16, y+2, x+16, y+10 );
+      g.fillRect( x+15, y+3, 3, 2 );
+      g.fillRect( x+15, y+8, 3, 2 );
+
+    }
+  }
+
+  /*
+   * drawPixel
+   */
+  public void pixel(int x, int y, Graphics g ){
+     g.drawLine( x, y, x, y );
+  }
+}
+
+
+/*
+ * helper class for coordinate memory
+ * could have been a point but maybe something will be added
+ * in the future
+ */
+class coordinate {
+  public int x;
+  public int y;
+
+  public coordinate( int x, int y ){
+    this.x = x;
+    this.y = y;
+  }
+}
+
+

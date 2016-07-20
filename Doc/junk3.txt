@@ -1,0 +1,5 @@
+FormatMessage code
+ChkSysCall actual . expected
+ChkHresult hres
+MBChkSysCall actual . expected
+MBChkHresult hres

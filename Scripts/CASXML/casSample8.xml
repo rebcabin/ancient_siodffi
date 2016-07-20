@@ -1,0 +1,87 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following sample shows XML embedded in Java-oid source,
+    illustrating many of the points above in context.
+
+E N D   C O M M E N T -->
+<!-- 
+class FileUtilities
+{
+   /*%XML--> <!-- this targets the following method, implicitly. -->
+   <permission
+       action          = "request"
+       permissionClass = "FileIOPermission"
+       >
+       <stateData>
+           <stateParameter name = "IncludeRead">
+               *\MergeSource\*.txt;*\MergeSource\*.doc           </>
+           <stateParameter name = "ExcludeRead">
+               *\MergeSource\*_sys.txt                           </>
+           <stateParameter name = "IncludeWrite">
+               *\MergeDestination\*.txt;*\MergeDestination\*.doc </>
+           <stateParameter name = "ExcludeWrite">
+               *\MergeDestination\*_sys.txt                      </>
+   </> </> <!--%*/
+
+   void MergeSort (String inFile1, String inFile2, String outFile)
+   {
+      :::
+   }
+   // Other methods
+   :::
+}
+
+class MyApplicationSorter
+{
+   /*%XML--> <!-- this targets the following method, implicitly. -->
+   <permission
+       action          = "request"
+       permissionClass = "FileIOPermission"
+       >
+       <stateData>
+           <stateParameter name = "IncludeRead">
+               c:\\MyApp\\Data\\MergeSource\\*.txt      </>
+           <stateParameter name = "IncludeWrite">
+               c:\\MyApp\\Data\\MergeDestination\\*.txt </>
+   </> </> <!--%*/
+
+   void SortMyApplicationDataFiles ()
+   {
+      MergeSort ("c:\\MyApp\\Data\\MergeSource\\file1.txt",
+                 "c:\\MyApp\\Data\\MergeSource\\file2.txt",
+                 "c:\\MyApp\\Data\\MergeDestination\\Out.txt") ;
+   }
+   // Other methods
+   :::
+}
+
+ class MyWebSiteClientSorter
+{
+   /*%XML-->	
+   <permission
+       action          = "request"
+       permissionClass = "FileIOPermission"
+       >
+       <stateData>
+           <stateParameter name = "IncludeRead">
+               c:\\MyApp\\Data\\MergeSource\\*.txt      </>
+           <stateParameter name = "IncludeWrite">
+               c:\\MyApp\\Data\\MergeDestination\\*.txt </>
+   </> </> <!--%*/
+
+   void SortMyWebDataFiles ()
+   {
+      MergeSort
+      ("c:\\MyApp\\WebData\\MergeSource\\cookies1.txt",
+       "c:\\MyApp\\WebData\\MergeSource\\cookies2.txt",
+       "c:\\MyApp\\WebData\\MergeDestination\\CookOut.txt") ;
+   }
+   // Other methods
+   :::
+}
+
+-->

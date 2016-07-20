@@ -1,0 +1,11 @@
+LIBRARY DCOM
+
+EXPORTS
+    tc_guid      DATA
+    tc_hresult   DATA
+    tc_interface DATA
+    tc_typeattr  DATA
+    tc_funcdesc  DATA
+    tc_vardesc   DATA
+    tc_typedesc  DATA
+    tc_bstr      DATA

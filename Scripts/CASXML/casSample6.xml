@@ -1,0 +1,22 @@
+<?XML version="1.0" RMD='EXTERNAL' ?>
+<!DOCTYPE ComPlusSecuritySpecification SYSTEM "cas.dtd">
+
+<!-- -------------------------------------------------------------------
+    C O M M E N T :
+
+    The following is just like the sample above, except that the
+    permission namespace reference is spelled out fully.  Note that it
+    could equally refer to a custom permission installed in, say,
+    'VerticalCorp.MedicalApps.PersonalRecords.Security.ReviewPermission'.
+
+E N D   C O M M E N T -->
+
+<permission
+    action          = "request"
+    permissionClass = "Microsoft.Windows.Security.Permissions.FileIOPermission"
+    targetMethod    = "Read"
+    >
+    <stateData>
+        :::
+</> </>
+

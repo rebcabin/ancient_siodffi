@@ -1,0 +1,192 @@
+<!ELEMENT permission (StateData)* >
+<!ATTLIST permission
+
+    action          (request | assert    | deny    |
+                     demand  | link      | inherit  )        "request"
+
+    permissionClass  CDATA                                   #IMPLIED
+
+    fullTrust       (no | allPermissions | unrestricted)     "no"
+
+    targetModule     CDATA                                   #IMPLIED
+    targetComponent  CDATA                                   #IMPLIED
+    targetClass      CDATA                                   #IMPLIED
+    targetInterface  CDATA                                   #IMPLIED
+    targetMethod     CDATA                                   #IMPLIED
+
+    >
+
+<!ELEMENT stateData      (stateParameter)* >
+
+<!ELEMENT stateParameter (methodParameterReference
+                        | constantReference
+                        | (#PCDATA)) >
+<!ATTLIST stateParameter
+    name  CDATA  #REQUIRED
+    >
+
+<!ELEMENT methodParameterReference (#PCDATA)>
+
+<!ELEMENT constantReference        (#PCDATA)>
+
+<!-- COMMENT
+
+  Remarks on the definitions in this file:
+
+  1.  There are hidden semantic constraints that must be handled by
+      programs that parse permission XML, i.e., programs that call
+      MSXML.  The constraints are enumerated immediately below.
+
+  2.  The various dispositions require some elucidation. They are of
+      two varieties: Request and Demand. The Request variety
+      represents a domain of privilege granted to an object. The
+      Demand variety represents security checks imposed on other
+      objects.  See the accompanying text above for more explanation
+      of this distinction. Furthermore, each disposition has a
+      declarative form, represented in the syntax in this document,
+      and some dispositions have imperative forms, represented by APIs
+      documented elsewhere. The imperative forms apply only to those
+      dispositions that are checked at run time.  Requests are
+      'checked' at registration time (actually converted into grants),
+      and Inheritance and Linktime dispositions are checked at link
+      time. See the table above.
+
+  3.  Requests must include all static data that's evaluated at
+      registration time, before suspect component code is executed.
+      Assertions, denials, and demands--dispositions with imperative
+      forms--may refer to parameters not known until run time, at
+      which the SecurityEngine accesses metadata to substitute actual
+      values for the parameters.  They do so via
+      'methodParameterReference'; see #6 below.
+
+   4.  XML permission annotations may appear in three circumstances or
+      contexts:
+
+      4.1.  A complete, self-contained, _STANDALONE_ XML file, that
+            is, an XML file that is NOT part of a tools project for a
+            module containing components.
+
+      4.2.  A _STANDASIDE_ XML file, that is, a file that IS part of a
+            tools project, just in the way that a .DEF file is.
+
+      4.3.  _EMBEDDED_ in component source.  The following points
+            spell out various semantic constraints that apply in these
+            cases.
+
+  5.  This point concerns the targets of permission tags, which are
+      specified in the target* ATTRIBUTES of the permission ELEMENT in
+      the DTD above.  We assume that a module contains one or more
+      components, each of which contains one or more classes and
+      interfaces, each of which contains one or more methods.  So the
+      natural hierarchy of targets is 'module / component /
+      class-or-interface / method'.  We also assume that a project, in
+      the tools sense, corresponds to exactly one module, and that a
+      file corresponds to exactly one component. (The latter
+      assumption comes from java and from simpler conventional
+      programming practices in C++: a component may comprise multiple
+      source files, but a source file belongs to one
+      component. Sources for libraries and packages may complicate
+      this picture.)  The tool knows the module that every file
+      targets, and knows, for every file, the component to which it
+      corresponds.
+
+      5.1.  A given fragment of XML targets either a module,
+            component, class, interface, or method.  If it targets a
+            module, it targets every component in the module.  If it
+            targets a component, it targets every class and interface
+            in the component.  Finally, if it targets a class or
+            interface, it targets every method in the class or
+            interface.
+
+      5.2.  A given XML fragment may refer to its targets explicitly
+            or implicitly.  If the fragment is part of a standaside
+            XML file, it may ONLY refer to its module implicitly: that
+            is, an XML file that is part of a module project may not
+            mention the project name explicitly in a targetModule
+            attribute.
+
+      5.3.  An embedded fragment at file scope, that is, not inside a
+            class definition, may explicitly target a component
+            different from the component to which the file belongs. If
+            it does not explicitly target a different component, it
+            implicitly targets the component to which its file
+            belongs.
+
+      5.4.  An embedded fragment at file scope immediately preceding a
+            class definition implicitly targets the class, unless it
+            explicitly targets some other entity.  The fragment may
+            explicitly target a different class or component.
+            Likewise for interfaces.
+
+      5.5.  An embedded fragment at CLASS SCOPE immediately preceding
+            a method definition implicitly targets the method, unless
+            it explicitly targets a different method.
+
+      5.6.  No permission tag may have an ambiguous target.  For
+            instance, if a tag targets a "Read" method, then the class
+            or interface, component, and modules must be known either
+            explicitly or implicitly, in keeping with the rules above.
+
+      5.7.  The processing of permission elements must resolve to a
+            complete hierarchy. In other words, when the processing is
+            done, the module, component, class-or-interface, and
+            method must be completely known. We leave unspecified at
+            present exactly how much of this information is stored in
+            the COM+ metadata, and how this information is laid out in
+            the metadata.
+
+  6.  'methodParameterReference' may appear only if the target,
+      implicit or explicit, is a method, and if 'disposition' is
+      'assertion', 'denial', or 'demand' -- in other words, those
+      dispositions that have imperative forms, and only those
+      dispositions.  If present, 'methodParameterReference' must refer
+      to a known, existing parameter in the denoted method from the
+      metadata.
+
+  7.  'constantReference' may refer to any compile-time constant
+      retrievable from metadata, such as C++ consts or Java static
+      final values.
+
+  7.  This notation is very precise and explicit.  As such, it is a
+      little verbose.  Editors, IDEs, and other programming tools
+      should display this information attractively and provide all the
+      formatting, construction, and cross-referencing (hyperlink)
+      tools that XML enables.  In fact, they should simply invoke
+      standard XML editors, such as XMLpad, to handle input,
+      formatting, and display of these notations.  Of course, the
+      notations will be _stored_ in text form and they may be created
+      and edited (by patient programmers) via any ordinary text
+      editor, such as notepad.
+
+      8.1.  A very interesting tools opportunity arises in the light
+            of the points above.  A tool should have options for
+            SCATTERING and GATHERING XML permission notations among
+            source files in a project / module.  Scatter would take a
+            standaside XML file, with fully qualified
+            targetComponents, targetClasses, etc., spray the XML among
+            the class, interface, and method definitions as
+            appropriate, and remove the explicitly stated targets.
+            Component-level tags would go at the top of the
+            distinguished source file that contains 'main'.  Other
+            tags would go right above the methods, interfaces, or
+            methods to which they apply, as specified in point #5
+            above. Gather would strip embedded XML and produce a
+            standaside XML file, filling in the missing inferred
+            target attributes, and adding the standaside file to the
+            project if necessary.  Project/AddFile should convert a
+            standalone XML file to a standaside file, with no option
+            for going the other way.  In all cases, XML should
+            _render_, _display_, or _present_ the permission tags
+            right next to the appropriate classes, interfaces, or
+            methods.
+
+      Issue: Should we look to lifting more of these constraints to
+            the syntactic level?  Some of these constraints have to do
+            with the similarities and differences between the various
+            dispositions.  Similarities argue for having a single
+            syntax for all dispositions.  Differences argue for
+            separate syntaxes.  Other syntactic constraints have no
+            obvious, easy syntactic representation.
+
+  END COMMENT
+-->

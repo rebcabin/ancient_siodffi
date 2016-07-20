@@ -1,0 +1,47 @@
+// ComTest1.idl : IDL source for ComTest1.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (ComTest1.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+	[
+		object,
+		uuid(9E21484F-E8CF-11D0-9506-444553540000),
+		dual,
+		helpstring("IComTestObject Interface"),
+		pointer_default(unique)
+	]
+	interface IComTestObject : IDispatch
+		{
+		[id(1), helpstring("method SayHello")] HRESULT SayHello([out] BSTR* bszOut);
+		[propget, id(2), helpstring("property ShortProp")] HRESULT ShortProp([out, retval] short *pVal);
+		[propput, id(2), helpstring("property ShortProp")] HRESULT ShortProp([in] short newVal);
+		[propget, id(3), helpstring("property LongProp")] HRESULT LongProp([out, retval] long *pVal);
+		[propput, id(3), helpstring("property LongProp")] HRESULT LongProp([in] long newVal);
+		[propget, id(4), helpstring("property VariantProp")] HRESULT VariantProp([out, retval] VARIANT *pVal);
+		[propput, id(4), helpstring("property VariantProp")] HRESULT VariantProp([in] VARIANT newVal);
+		[propget, id(5), helpstring("property BstrProp")] HRESULT BstrProp([out, retval] BSTR *pVal);
+		[propput, id(5), helpstring("property BstrProp")] HRESULT BstrProp([in] BSTR newVal);
+	};
+[
+	uuid(9E214842-E8CF-11D0-9506-444553540000),
+	version(1.0),
+	helpstring("ComTest1 1.0 Type Library")
+]
+library COMTEST1Lib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(9E214850-E8CF-11D0-9506-444553540000),
+		helpstring("ComTestObject Class")
+	]
+	coclass ComTestObject
+	{
+		[default] interface IComTestObject;
+	};
+};

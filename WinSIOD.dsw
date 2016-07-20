@@ -1,0 +1,149 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
+
+###############################################################################
+
+Project: "ComTest1"=".\ComTest1\ComTest1.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ComTest2"=".\ComTest2\ComTest2.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "DlgSIOD"=".\DlgSIOD\DlgSIOD.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libsiod
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name RealLoad
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Scripts
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name Victim
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ComTest1
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ComTest2
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Doc"=".\Doc\Doc.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "RealLoad"=".\RealLoad\RealLoad.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name libsiod
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name dcom
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "Scripts"=".\Scripts\Scripts.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Victim"=".\Victim\Victim.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "dcom"=".\DCOM\dcom.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "libsiod"=".\LibSiod\libsiod.dsp" - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

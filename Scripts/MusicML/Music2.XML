@@ -1,0 +1,11 @@
+    <segment>
+      <subsegment position="one">
+        <note beat="quarter" name="f"/> 
+        <note beat="eighth"  name="g"/> 
+        <chord>
+          <note beat="sixteenth" name="a"/>
+          <note beat="quarter" name="b"/>
+          </chord>
+        <rest size="half"/>
+      </subsegment>
+    </segment>

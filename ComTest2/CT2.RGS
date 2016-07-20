@@ -1,0 +1,22 @@
+HKCR
+{
+	CT2.CT2.1 = s 'CT2 Class'
+	{
+		CLSID = s '{105BB1D2-EFDD-11D0-9506-D74222CE0464}'
+	}
+	CT2.CT2 = s 'CT2 Class'
+	{
+		CurVer = s 'CT2.CT2.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {105BB1D2-EFDD-11D0-9506-D74222CE0464} = s 'CT2 Class'
+		{
+			ProgID = s 'CT2.CT2.1'
+			VersionIndependentProgID = s 'CT2.CT2'
+			ForceRemove 'Programmable'
+			LocalServer32 = s '%MODULE%'
+			val AppID = s '{105BB1C5-EFDD-11D0-9506-D74222CE0464}'
+		}
+	}
+}

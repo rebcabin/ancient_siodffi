@@ -1,0 +1,120 @@
+<!-- music DTD a DTD for MusicML
+
+   MusicML by the Connection Factory, March 5, 1998
+
+                   (c) Copyright notice
+
+   A simple MusicML Applet wich reads a MusicML document
+   parses it with the microsoft xml parser and then
+   parses the document tree to display it on a lightweight
+   component.
+
+   The com.ms.xml.. classes are by Microsoft and can be found
+   at http://www.microsoft.com/
+
+   MusicML (c) Copyright by The Connection Factory B.V.
+                            Grotekerkplein 38
+                            3011 GE Rotterdam
+                            the Netherlands
+                            +31 10 4046870
+                            info@tcf.nl
+
+   You may use this code for educational purposes only.
+   Feel free to experiment with it.
+
+   Commercial usage of any part of MusicML including its
+   java classes and DTD description is prohibited.
+
+   If you do want to use MusicML for commercial usage
+   contact The Connection Factory at the above mentioned
+   address
+
+-->  
+
+<!-- attribute definitions -->
+
+
+<!-- note entity -->
+<!ENTITY % att-note-note 'name ( a | b | c | d | e | f | g ) #REQUIRED'>
+
+<!-- note level base is the normal accord c,d,e,f,g,a,b -->
+<!ENTITY % att-level 'level ( min3 | min2 | min1 | zero | plus1 | plus2 | plus3 ) "zero"'>
+
+<!ENTITY % att-beat 'beat (whole | threequarter | half | quarter | eighth | sixteenth )  "quarter"' >
+
+<!-- flat and sharp attributes -->
+<!ENTITY % att-notetype 'notetype ( flat | sharp ) #IMPLIED'>
+
+<!-- clef (g of f): Bass cq Treble Clef -->
+<!ENTITY % att-cleff 'cleff (bass | treble) "bass"'>
+
+<!-- musicrow has one or two staffs -->
+<!ENTITY % att-musicrow 'size (one | two) "two"'>
+
+<!-- entry part can be on the first or the second rowpart -->
+<!ENTITY % att-position 'position ( one | two ) #REQUIRED'>
+
+<!-- rythm 3/4, 2/4, 6/8, 1/2, 4/4, 5/4 -->
+<!ENTITY % att-rythm 'rythm ( threequarter | twoquarter | sixeight | half | fourquarter | fivequarter ) #IMPLIED'>
+
+<!-- rests: whole,half,quarter,eighth,sixteenth-->
+<!ENTITY % att-rest 'size (whole | half | quarter | eighth | sixteenth) #REQUIRED'>
+
+<!-- beam: single or double bar-->
+<!ENTITY % att-beam 'size (single | double | triple) "single"'>
+
+
+<!-- pianissimo, piano, mezzo forte, forte, fortissimo, fortississimo -->
+<!-- very soft , soft, slightly soft, not loud, loud, very loud -->
+<!ENTITY % att-note-dynamics 'dynamics ( pp |p | mp | mf | f | ff | fff ) #IMPLIED'>
+
+<!ENTITY % att-add-info 'info CDATA #IMPLIED'>
+
+<!ELEMENT sheetmusic (musicrow+)>
+
+<!ELEMENT musicrow   ( (entrysegment, segment+) | (entrysegment, segment+, text) )>
+<!ATTLIST musicrow   %att-musicrow;                   >
+
+<!ELEMENT entrysegment  ( (entrypart) | (entrypart, entrypart) )>
+
+<!ELEMENT entrypart     ( ( molkruis )* )             >
+<!ATTLIST entrypart     %att-cleff;
+                        %att-rythm;                   
+                        %att-position;                >
+
+<!ELEMENT molkruis       EMPTY                        >
+<!ATTLIST molkruis     %att-note-note;
+                       %att-level;
+                       %att-notetype;                 >
+
+<!ELEMENT segment       ( ( subsegment ) | (subsegment, subsegment) )>
+
+<!ELEMENT subsegment    (  ( rest | note | beam | chord )* )   >
+<!ATTLIST subsegment    %att-position;                         >
+
+<!ELEMENT chord      ( note* )                        >
+<!ATTLIST chord      %att-add-info;                   >
+
+<!ELEMENT note         EMPTY                          >
+<!ATTLIST note         %att-note-note;
+                       %att-level;
+                       %att-beat;
+                       %att-notetype;
+                       %att-note-dynamics;            
+                       %att-add-info;                 >
+<!ELEMENT rest         EMPTY                          >
+<!ATTLIST rest         %att-rest;                     >
+
+<!ELEMENT text       ( #PCDATA )                      >
+
+<!-- connecting notes to a beam -->
+<!ELEMENT beam       ( (rest|note)*)                  > 
+<!ATTLIST beam       %att-beam;                       >
+
+<!-- end of music ml def-->
+
+
+
+
+
+

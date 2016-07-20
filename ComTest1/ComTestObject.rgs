@@ -1,0 +1,24 @@
+HKCR
+{
+	ComTestObject.ComTestObject.1 = s 'ComTestObject Class'
+	{
+		CLSID = s '{9E214850-E8CF-11D0-9506-444553540000}'
+	}
+	ComTestObject.ComTestObject = s 'ComTestObject Class'
+	{
+		CurVer = s 'ComTestObject.ComTestObject.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {9E214850-E8CF-11D0-9506-444553540000} = s 'ComTestObject Class'
+		{
+			ProgID = s 'ComTestObject.ComTestObject.1'
+			VersionIndependentProgID = s 'ComTestObject.ComTestObject'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+		}
+	}
+}
